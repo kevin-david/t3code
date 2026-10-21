@@ -845,6 +845,7 @@ export default function Sidebar() {
     routeTarget?.kind === "draft" ? store.getDraftSession(routeTarget.draftId) : null,
   );
   const environmentMachineById = useEnvironmentMachines();
+  const environmentCustomIconById = new Map(Array.from(serverConfigs, ([id, config]) => [id, config.settings.environmentCustomIcon] as const));
   const projectGroupsRef = useRef(projectGroups);
   const persistedProjectScopeKey = useUiStateStore((store) => store.sidebarProjectScopeKey);
   const setPersistedProjectScopeKey = useUiStateStore((store) => store.setSidebarProjectScopeKey);
@@ -2775,6 +2776,7 @@ export default function Sidebar() {
                         environmentMachine={
                           environmentMachineById.get(thread.environmentId) ?? "server"
                         }
+                        environmentCustomIcon={environmentCustomIconById.get(thread.environmentId)}
                         providerEntryByInstanceId={
                           providerEntriesByEnvironment.get(thread.environmentId) ??
                           EMPTY_PROVIDER_ENTRIES
@@ -2914,6 +2916,7 @@ export default function Sidebar() {
                             environmentMachine={
                               environmentMachineById.get(thread.environmentId) ?? "server"
                             }
+                            environmentCustomIcon={environmentCustomIconById.get(thread.environmentId)}
                             scratchMachineLabel={scratchMachineLabelFor(thread)}
                             project={
                               projectByKey.get(`${thread.environmentId}:${thread.projectId}`) ??

@@ -3,10 +3,12 @@ import {
   ENVIRONMENT_MACHINE_KINDS,
   isEnvironmentMachineKind,
   resolveEnvironmentMachineKind,
+  type ProjectIconOverride,
   type EnvironmentId,
   type ServerConfig,
 } from "@t3tools/contracts";
 
+import { lazy, Suspense, useState } from "react";
 import { useUpdateEnvironmentSettings } from "../../hooks/useSettings";
 import { useEnvironmentScope } from "../../state/session";
 import { ENVIRONMENT_MACHINE_KIND_LABELS, EnvironmentMachineIcon } from "../EnvironmentMachineIcon";
@@ -19,6 +21,12 @@ import {
   MenuSubPopup,
   MenuSubTrigger,
 } from "../ui/menu";
+
+const ProjectIconPickerDialog = lazy(() =>
+  import("./ProjectIconPickerDialog").then((module) => ({
+    default: module.ProjectIconPickerDialog,
+  })),
+);
 
 export function resolveEnvironmentIconPickerLock(input: {
   readonly serverConfig: Pick<ServerConfig, "environment"> | null;
@@ -44,20 +52,32 @@ export function EnvironmentIconMenu({
   readonly serverConfig: Pick<ServerConfig, "environment"> | null;
 }) {
   const updateSettings = useUpdateEnvironmentSettings(environmentId);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const operateAccess = useEnvironmentScope(environmentId, AuthSettingsWriteScope)
     ? "granted"
     : "denied";
   const lock = resolveEnvironmentIconPickerLock({ serverConfig, operateAccess });
   const detected = serverConfig?.environment.platform.machine ?? "server";
   const resolved = resolveEnvironmentMachineKind(serverConfig);
+  const customIcon = serverConfig?.settings?.environmentCustomIcon ?? null;
 
   return (
+    <>
     <MenuSub>
       <MenuSubTrigger>
-        <EnvironmentMachineIcon kind={resolved} />
+        <EnvironmentMachineIcon kind={resolved} customIcon={customIcon} />
         Icon
       </MenuSubTrigger>
       <MenuSubPopup>
+        <MenuItem disabled={lock !== null || serverConfig?.environment.capabilities.environmentCustomIcon !== true} onClick={() => setPickerOpen(true)}>
+          Choose custom icon…
+        </MenuItem>
+        {customIcon !== null ? (
+          <MenuItem disabled={lock !== null} onClick={() => updateSettings({ environmentCustomIcon: null })}>
+            Reset custom icon
+          </MenuItem>
+        ) : null}
+        <MenuSeparator />
         {lock !== null ? (
           <>
             <MenuItem disabled className="whitespace-normal">
@@ -91,5 +111,18 @@ export function EnvironmentIconMenu({
         </MenuRadioGroup>
       </MenuSubPopup>
     </MenuSub>
+    {pickerOpen ? (
+      <Suspense fallback={null}>
+        <ProjectIconPickerDialog
+          current={customIcon}
+          projectName={serverConfig?.environment.label ?? "Environment"}
+          title="Choose environment icon"
+          open
+          onOpenChange={setPickerOpen}
+          onSelect={(icon: ProjectIconOverride) => updateSettings({ environmentCustomIcon: icon })}
+        />
+      </Suspense>
+    ) : null}
+    </>
   );
 }
