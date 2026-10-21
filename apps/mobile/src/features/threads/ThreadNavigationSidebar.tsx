@@ -287,6 +287,7 @@ function ThreadNavigationSidebarPane(
   const {
     providersByEnvironmentId,
     machineByEnvironmentId,
+    customIconByEnvironmentId,
     settlementEnvironmentIds,
     snoozeEnvironmentIds,
     pinningEnvironmentIds,
@@ -581,6 +582,7 @@ function ThreadNavigationSidebarPane(
                 : null
             }
             environmentMachine={machineByEnvironmentId.get(item.pendingTask.environmentId)}
+            environmentCustomIcon={customIconByEnvironmentId.get(item.pendingTask.environmentId)}
             pane="sidebar"
             showPendingDivider={item.showPendingDivider}
             onSelectPendingTask={props.onOpenPendingTask}
@@ -613,6 +615,7 @@ function ThreadNavigationSidebarPane(
                 : null
             }
             environmentMachine={machineByEnvironmentId.get(thread.environmentId)}
+            environmentCustomIcon={customIconByEnvironmentId.get(thread.environmentId)}
             searchMatch={threadSearchMatchByKey.get(
               threadSearchMatchKey({
                 environmentId: thread.environmentId,

@@ -461,6 +461,7 @@ export function HomeScreen(props: HomeScreenProps) {
   const {
     providersByEnvironmentId,
     machineByEnvironmentId,
+    customIconByEnvironmentId,
     settlementEnvironmentIds,
     snoozeEnvironmentIds,
     pinningEnvironmentIds,
@@ -587,6 +588,7 @@ export function HomeScreen(props: HomeScreenProps) {
               : null
           }
           environmentMachine={machineByEnvironmentId.get(item.pendingTask.environmentId)}
+          environmentCustomIcon={customIconByEnvironmentId.get(item.pendingTask.environmentId)}
           showPendingDivider={item.showPendingDivider}
           showTrailingDivider={item.showTrailingDivider}
           onSelectPendingTask={props.onSelectPendingTask}
@@ -653,6 +655,7 @@ export function HomeScreen(props: HomeScreenProps) {
             : null
         }
         environmentMachine={machineByEnvironmentId.get(thread.environmentId)}
+        environmentCustomIcon={customIconByEnvironmentId.get(thread.environmentId)}
         searchMatch={threadSearchMatchByKey.get(
           threadSearchMatchKey({
             environmentId: thread.environmentId,

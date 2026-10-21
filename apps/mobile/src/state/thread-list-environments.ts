@@ -35,6 +35,7 @@ function selectEnvironment(config: ServerConfig) {
       }),
     ),
     machineKind: resolveEnvironmentMachineKind(config),
+    customIcon: config.settings.environmentCustomIcon,
     capabilities: config.environment.capabilities,
   };
 }
@@ -64,6 +65,7 @@ function sameProviders(
 function collectEnvironments(environments: ReadonlyMap<EnvironmentId, ListEnvironment>) {
   const providersByEnvironmentId = new Map<EnvironmentId, ReadonlyArray<ThreadListProvider>>();
   const machineByEnvironmentId = new Map<EnvironmentId, EnvironmentMachineKind>();
+  const customIconByEnvironmentId = new Map<EnvironmentId, ServerConfig["settings"]["environmentCustomIcon"]>();
   const settlementEnvironmentIds = new Set<EnvironmentId>();
   const snoozeEnvironmentIds = new Set<EnvironmentId>();
   const pinningEnvironmentIds = new Set<EnvironmentId>();
@@ -71,7 +73,8 @@ function collectEnvironments(environments: ReadonlyMap<EnvironmentId, ListEnviro
   const pinReorderEnvironmentIds = new Set<EnvironmentId>();
   const activeReorderEnvironmentIds = new Set<EnvironmentId>();
   const titleRegenerationEnvironmentIds = new Set<EnvironmentId>();
-  for (const [id, { providers, machineKind, capabilities }] of environments) {
+  for (const [id, { providers, machineKind, customIcon, capabilities }] of environments) {
+    customIconByEnvironmentId.set(id, customIcon);
     providersByEnvironmentId.set(id, providers);
     machineByEnvironmentId.set(id, machineKind);
     if (capabilities.threadSettlement === true) settlementEnvironmentIds.add(id);
@@ -85,6 +88,7 @@ function collectEnvironments(environments: ReadonlyMap<EnvironmentId, ListEnviro
   return {
     providersByEnvironmentId,
     machineByEnvironmentId,
+    customIconByEnvironmentId,
     settlementEnvironmentIds,
     snoozeEnvironmentIds,
     pinningEnvironmentIds,
@@ -114,6 +118,7 @@ export function createThreadListEnvironmentsAtom(
         prior &&
         prior.providers === selected.providers &&
         prior.machineKind === selected.machineKind &&
+        JSON.stringify(prior.customIcon) === JSON.stringify(selected.customIcon) &&
         capabilityKeys.every(
           (key) => (prior.capabilities[key] === true) === (selected.capabilities[key] === true),
         );
