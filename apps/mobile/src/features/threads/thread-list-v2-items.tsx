@@ -25,7 +25,7 @@ import {
   formatWorkingDurationLabel,
   resolveThreadWorkingStartedAt,
 } from "@t3tools/client-runtime/state/models";
-import { AuthOrchestrationOperateScope, type EnvironmentMachineKind } from "@t3tools/contracts";
+import { AuthOrchestrationOperateScope, type EnvironmentMachineKind, type ProjectIconOverride } from "@t3tools/contracts";
 import { canSnooze, resolveSnoozePresets } from "@t3tools/client-runtime/state/thread-settled";
 import type { MenuAction } from "@react-native-menu/menu";
 import { memo, useCallback, useEffect, useMemo, useState, type ComponentProps } from "react";
@@ -320,6 +320,7 @@ export const ThreadListV2PendingRow = memo(function ThreadListV2PendingRow(props
   readonly projectTitle?: string;
   readonly environmentLabel: string | null;
   readonly environmentMachine?: EnvironmentMachineKind;
+  readonly environmentCustomIcon?: ProjectIconOverride | null;
   readonly pane?: "screen" | "sidebar";
   readonly showPendingDivider: boolean;
   readonly showTrailingDivider?: boolean;
@@ -426,6 +427,7 @@ export const ThreadListV2PendingRow = memo(function ThreadListV2PendingRow(props
           {props.environmentLabel && props.environmentMachine ? (
             <EnvironmentMachineSymbol
               kind={props.environmentMachine}
+              customIcon={props.environmentCustomIcon}
               size={11}
               tintColorClassName={
                 sidebarPane ? "accent-drawer-foreground-muted" : "accent-foreground-tertiary"
@@ -501,6 +503,7 @@ export const ThreadListV2Row = memo(function ThreadListV2Row(props: {
   readonly providerInstance: ThreadRowProviderInstance | null;
   readonly environmentLabel: string | null;
   readonly environmentMachine?: EnvironmentMachineKind;
+  readonly environmentCustomIcon?: ProjectIconOverride | null;
   readonly pane?: "screen" | "sidebar";
   readonly showTrailingDivider?: boolean;
   readonly selected?: boolean;
@@ -1119,6 +1122,7 @@ export const ThreadListV2Row = memo(function ThreadListV2Row(props: {
             {props.environmentLabel && props.environmentMachine ? (
               <EnvironmentMachineSymbol
                 kind={props.environmentMachine}
+              customIcon={props.environmentCustomIcon}
                 size={11}
                 tintColorClassName={
                   selected

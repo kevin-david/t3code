@@ -144,6 +144,7 @@ export const ExecutionEnvironmentCapabilities = Schema.Struct({
   /** Server answers projects.listIgnoredFiles. */
   ignoredFileListing: Schema.optionalKey(Schema.Boolean),
   environmentIcon: Schema.optionalKey(Schema.Boolean),
+  environmentCustomIcon: Schema.optionalKey(Schema.Boolean),
   desktopAppUpdate: Schema.optionalKey(Schema.Boolean),
   /** Server answers orchestration.subscribeCommandOutput. Absent on older servers,
       which never send command output, so clients must not subscribe. */

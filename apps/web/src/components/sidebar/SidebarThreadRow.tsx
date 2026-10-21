@@ -21,7 +21,7 @@ import {
 import { scopeThreadRef, scopedThreadKey } from "@t3tools/client-runtime/environment";
 import {
   AuthOrchestrationOperateScope,
-  type EnvironmentMachineKind,
+  type EnvironmentMachineKind, type ProjectIconOverride,
   type ScopedThreadRef,
 } from "@t3tools/contracts";
 
@@ -227,6 +227,7 @@ function SidebarThreadTooltip({
   projectDisplayName,
   environmentLabel,
   environmentMachine,
+  environmentCustomIcon,
   providerEntry,
   providerEntryByInstanceId,
   showInstanceBadge,
@@ -241,6 +242,7 @@ function SidebarThreadTooltip({
   projectDisplayName: string | null;
   environmentLabel: string | null;
   environmentMachine: EnvironmentMachineKind;
+  environmentCustomIcon?: ProjectIconOverride | null;
   providerEntry: SidebarProviderEntry | null;
   providerEntryByInstanceId: ReadonlyMap<string, SidebarProviderEntry>;
   showInstanceBadge: boolean;
@@ -280,6 +282,7 @@ function SidebarThreadTooltip({
           <div className="flex min-w-0 items-center gap-2">
             <EnvironmentMachineIcon
               kind={environmentMachine}
+              customIcon={environmentCustomIcon}
               className="size-3 shrink-0 stroke-muted-foreground"
             />
             <div className="min-w-0 truncate text-foreground/75">{environmentLabel}</div>
@@ -523,6 +526,7 @@ type SidebarThreadRowProps = {
   currentEnvironmentId: string | null;
   environmentLabel: string | null;
   environmentMachine: EnvironmentMachineKind;
+  environmentCustomIcon?: ProjectIconOverride | null;
   scratchMachineLabel: string | null;
   project: EnvironmentProject | null;
   projectDisplayName: string | null;
@@ -723,6 +727,7 @@ const SidebarThreadRow = memo(function SidebarThreadRow(props: SidebarThreadRowP
       projectDisplayName={props.projectDisplayName}
       environmentLabel={props.environmentLabel}
       environmentMachine={props.environmentMachine}
+      environmentCustomIcon={props.environmentCustomIcon}
       providerEntry={providerEntry}
       providerEntryByInstanceId={props.providerEntryByInstanceId}
       showInstanceBadge={showInstanceBadge}
@@ -1435,6 +1440,7 @@ const SidebarThreadRow = memo(function SidebarThreadRow(props: SidebarThreadRowP
                   <EnvironmentMachineIcon
                     aria-hidden
                     kind={props.environmentMachine}
+                    customIcon={props.environmentCustomIcon}
                     className="size-3 shrink-0 text-muted-foreground/40"
                   />
                   <span className="min-w-0 flex-1 truncate text-muted-foreground/40">
@@ -1465,6 +1471,7 @@ const SidebarThreadRow = memo(function SidebarThreadRow(props: SidebarThreadRowP
                     <EnvironmentMachineIcon
                       aria-hidden
                       kind={props.environmentMachine}
+                    customIcon={props.environmentCustomIcon}
                       className="size-3.5"
                     />
                   </span>
@@ -1498,6 +1505,7 @@ export const SidebarSearchResultRow = memo(function SidebarSearchResultRow(props
   projectDisplayName: string | null;
   environmentLabel: string | null;
   environmentMachine: EnvironmentMachineKind;
+  environmentCustomIcon?: ProjectIconOverride | null;
   providerEntryByInstanceId: ReadonlyMap<string, SidebarProviderEntry>;
   isHighlighted: boolean;
   isRouteActive: boolean;
@@ -1653,6 +1661,7 @@ export const SidebarSearchResultRow = memo(function SidebarSearchResultRow(props
           projectDisplayName={props.projectDisplayName}
           environmentLabel={props.environmentLabel}
           environmentMachine={props.environmentMachine}
+      environmentCustomIcon={props.environmentCustomIcon}
           providerEntry={providerEntry}
           providerEntryByInstanceId={props.providerEntryByInstanceId}
           showInstanceBadge={showInstanceBadge}
