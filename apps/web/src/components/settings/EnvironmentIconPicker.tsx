@@ -29,7 +29,7 @@ const ProjectIconPickerDialog = lazy(() =>
 );
 
 export function resolveEnvironmentIconPickerLock(input: {
-  readonly serverConfig: Pick<ServerConfig, "environment"> | null;
+  readonly serverConfig: Pick<ServerConfig, "environment" | "settings"> | null;
   readonly operateAccess: "granted" | "denied" | "pending";
 }): string | null {
   if (input.serverConfig === null) {
