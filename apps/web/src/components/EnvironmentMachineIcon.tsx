@@ -1,7 +1,11 @@
-import type { EnvironmentMachineKind } from "@t3tools/contracts";
+import type { EnvironmentMachineKind, ProjectIconOverride } from "@t3tools/contracts";
 import { CloudIcon, LaptopIcon, MonitorIcon, ServerIcon, type LucideProps } from "lucide-react";
-import type { FunctionComponent, SVGProps } from "react";
+import { createElement, type FunctionComponent, type SVGProps } from "react";
 import { LinuxIcon } from "./Icons";
+import { ProjectMonogram } from "./ProjectMonogram";
+import { projectIconColorClassName } from "../projectIconColors";
+import { lucideIconByName } from "../lib/lucideIconByName";
+import { cn } from "~/lib/utils";
 
 function LucideLike(props: SVGProps<SVGSVGElement>) {
   return (
@@ -66,8 +70,43 @@ export function environmentMachineIcon(
 
 export function EnvironmentMachineIcon({
   kind,
+  customIcon,
+  className,
   ...props
-}: LucideProps & { readonly kind: EnvironmentMachineKind }) {
+}: LucideProps & {
+  readonly kind: EnvironmentMachineKind;
+  readonly customIcon?: ProjectIconOverride | null;
+}) {
+  // A missing override preserves the existing icon on every surface.
+  if (customIcon?.kind === "emoji") {
+    return (
+      <span
+        aria-hidden="true"
+        className={cn(
+          "inline-flex size-3.5 shrink-0 items-center justify-center leading-none [container-type:size]",
+          className,
+        )}
+      >
+        <span className="text-[length:80cqh] leading-none">{customIcon.emoji}</span>
+      </span>
+    );
+  }
+  if (customIcon?.kind === "monogram") {
+    return (
+      <ProjectMonogram
+        text={customIcon.text}
+        color={customIcon.color}
+        className={className}
+      />
+    );
+  }
+  if (customIcon?.kind === "lucide") {
+    const Icon = lucideIconByName(customIcon.name) ?? ICON_BY_KIND[kind];
+    return createElement(Icon, {
+      ...props,
+      className: cn(projectIconColorClassName(customIcon.color), className),
+    });
+  }
   const Icon = ICON_BY_KIND[kind];
-  return <Icon {...props} />;
+  return <Icon {...props} className={className} />;
 }
